@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    {% load static %}
+    <link rel="stylesheet" type="text/css" href="{% static 'home.css' %}" />
+</head>
+<body>
+    <div class="topnav">
+      <a class="active" href="/home/">Home</a>
+      <a href="/add/">Add Property</a>
+    </div>
+
+    <div class="row">
+        <div class="column">
+            <ul>
+                {% for i in properties %}
+                <li>
+                    <b>{{ i.address }}</b>
+                    <table>
+                        <tr><td>Type: {{ i.type }}</td><td>Rent: {{ i.rent }}</td></tr>
+                        <tr><td>Bedrooms: {{ i.bedrooms }}</td><td>Bathrooms: {{ i.bathrooms }}</td></tr>
+                        <tr><td>Link: {{ i.link }}</td></tr>
+                        <tr><td>Notes: {{ i.notes }}</td></tr>
+                    </table>
+                </li>
+                {% endfor %}
+            </ul>
+        </div>
+        <div class="column">
+            <iframe
+                  width="600"
+                  height="700"
+                  frameborder="0" style="border:0"
+                  src="https://www.google.com/maps/embed/v1/place?key={{ googleApiKey }}&q=Space+Needle,Seattle+WA" allowfullscreen>
+            </iframe>
+        </div>
+    </div>
+
+</body>
+</html>

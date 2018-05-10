@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Add a Property</title>
+    {% load static %}
+    <link rel="stylesheet" type="text/css" href="{% static 'add.css' %}" />
+</head>
+<body>
+    <div class="topnav">
+      <a class="active" href="/home/">Home</a>
+      <a href="/add/">Add Property</a>
+    </div>
+    <br/>
+    {% if error == 1 %}
+        <div class="alert">
+          <span class="closebtn" onclick="this.parentElement.style.display='none';">&times;</span>
+          That address was not found or is invalid!
+        </div>
+    {% elif error == 2 %}
+        <div class="alert">
+          <span class="closebtn" onclick="this.parentElement.style.display='none';">&times;</span>
+          You've already input that address!
+        </div>
+    {% endif %}
+    <form method="post" action="/add/">
+        <table>
+            {{ form.as_table }}
+        </table>
+        <input type="submit"/>
+    </form>
+    <form action="/home/">
+        <input type="submit" value="View Properties"/>
+    </form>
+</body>
+</html>
