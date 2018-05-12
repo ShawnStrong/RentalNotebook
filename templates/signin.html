@@ -2,9 +2,20 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>$Title$</title>
+    <title>Sign In</title>
+    {% load static %}
+    <link rel="stylesheet" type="text/css" href="{% static 'signin.css' %}" />
 </head>
 <body>
-$END$
+<form method="post" action="/signin/">
+    Username:<br>
+    <input type="text" name="username"><br>
+    Password:<br>
+    <input type="text" name="password"><br>
+    <input type="submit" value="Login"/>
+</form>
+<form action="/create">
+    <input type="submit" value="Create New User"/>
+</form>
 </body>
 </html>
