@@ -9,22 +9,72 @@
 <body>
     <div class="topnav">
       <a class="active" href="/home/">Home</a>
-      <a href="/add/">Add Property</a>
+      <a href="/add/">Add Rental</a>
+        <a href="/addMyPlace/">Add My Place</a>
     </div>
 
     <div class="row">
         <div class="column">
+            <h3>My Places</h3>
+            <b>School</b>
+            <ul>
+                {% for i in school %}
+                    <li>
+                        <table>
+                            <tr><td>Address: {{ i.address }}</td></tr>
+                            <tr><td>Notes: {{ i.notes }}</td></tr>
+                            <tr><td><a href="/update/?id={{ i.id }}&property=place">Update</a></td>
+                                <td><a href="/delete/?id={{ i.id }}&property=place">Delete</a></tr>
+                        </table>
+                    </li>
+                {% empty %}
+                    No schools added yet. Use 'Add My Place' to add one.
+                {% endfor %}
+            </ul>
+            <b>Job</b>
+            <ul>
+                {% for i in job %}
+                    <li>
+                        <table>
+                            <tr><td>Address: {{ i.address }}</td></tr>
+                            <tr><td>Notes: {{ i.notes }}</td></tr>
+                            <tr><td><a href="/update/?id={{ i.id }}&property=place">Update</a></td>
+                                <td><a href="/delete/?id={{ i.id }}&property=place">Delete</a></tr>
+                        </table>
+                    </li>
+                {% empty %}
+                    No jobs added yet. Use 'Add My Place' to add one.
+                {% endfor %}
+            </ul>
+            <b>Other</b>
+            <ul>
+                {% for i in other %}
+                    <li>
+                        <table>
+                            <tr><td>Address: {{ i.address }}</td></tr>
+                            <tr><td>Notes: {{ i.notes }}</td></tr>
+                            <tr><td><a href="/update/?id={{ i.id }}&property=place">Update</a></td>
+                                <td><a href="/delete/?id={{ i.id }}&property=place">Delete</a></tr>
+                        </table>
+                    </li>
+                {% empty %}
+                    No 'Other' added yet. Use 'Add My Place' to add one.
+                {% endfor %}
+            </ul>
+            <h3>Rentals</h3>
             <ul>
                 {% for i in properties %}
-                <li>
-                    <b>{{ i.address }}</b>
-                    <table>
-                        <tr><td>Type: {{ i.type }}</td><td>Rent: {{ i.rent }}</td></tr>
-                        <tr><td>Bedrooms: {{ i.bedrooms }}</td><td>Bathrooms: {{ i.bathrooms }}</td></tr>
-                        <tr><td>Link: {{ i.link }}</td></tr>
-                        <tr><td>Notes: {{ i.notes }}</td></tr>
-                    </table>
-                </li>
+                    <li>
+                        <table>
+                            <tr><td>Address: {{ i.address }}</td></tr>
+                            <tr><td>Type: {{ i.type }}</td><td>Rent: {{ i.rent }}</td></tr>
+                            <tr><td>Bedrooms: {{ i.bedrooms }}</td><td>Bathrooms: {{ i.bathrooms }}</td></tr>
+                            <tr><td>Link: {{ i.link }}</td></tr>
+                            <tr><td>Notes: {{ i.notes }}</td></tr>
+                            <tr><td><a href="/update/?id={{ i.id }}&property=rental">Update</a></td>
+                                <td><a href="/delete/?id={{ i.id }}&property=rental">Delete</a></tr>
+                        </table>
+                    </li>
                 {% endfor %}
             </ul>
         </div>

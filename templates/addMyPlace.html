@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Add a Rental</title>
+    <title>Add a Place</title>
     {% load static %}
     <link rel="stylesheet" type="text/css" href="{% static 'add.css' %}" />
 </head>
@@ -24,7 +24,7 @@
           You've already input that address!
         </div>
     {% endif %}
-    <form method="post" action="/add/">
+    <form method="post" action="/addMyPlace/">
         <table>
             {{ form.as_table }}
         </table>

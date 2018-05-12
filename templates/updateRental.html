@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Update Rental</title>
+</head>
+<body>
+    <div class="topnav">
+      <a class="active" href="/home/">Home</a>
+      <a href="/add/">Add Rental</a>
+        <a href="/addMyPlace/">Add My Place</a>
+    </div>
+    <br/>
+    <form method="post" action="/update/?property=rental">
+        <table>
+            {{ form.as_table }}
+        </table>
+        <input type="submit"/>
+    </form>
+</body>
+</html>

@@ -1,7 +1,7 @@
 from django.views.decorators.csrf import csrf_exempt
 from django.shortcuts import redirect, render
-from final.forms import PropertyForm
-from final.models import Property
+from final.forms import PropertyForm, PlaceForm
+from final.models import Property, Place
 import urllib
 import json
 import os
@@ -18,9 +18,15 @@ def signin(request):
 
 @csrf_exempt
 def home(request):
-    p = Property.objects.all()
-    print(googleApiKey)
-    return render(request, "home.html", {'properties': p, 'googleApiKey': googleApiKey})
+    properties = Property.objects.all()
+    school = Place.objects.filter(type = 'School')
+    job = Place.objects.filter(type = 'Job')
+    other = Place.objects.filter(type = 'Other')
+    return render(request, "home.html", {'properties': properties,
+                                         'school': school,
+                                         'job': job,
+                                         'other': other,
+                                         'googleApiKey': googleApiKey})
 
 @csrf_exempt
 def getdata(request):
@@ -50,6 +56,8 @@ def add(request):
                 # check if this address is already in the database
                 if Property.objects.filter(address = address).count() > 0:
                     return render(request, "add.html", {'form': PropertyForm(instance=p), 'error': 2})
+                elif Place.objects.filter(address = address).count() > 0:
+                    return render(request, "add.html", {'form': PropertyForm(instance=p), 'error': 2})
                 else:
                     latitude = addressData['results'][0]['geometry']['location']['lat']
                     longitude = addressData['results'][0]['geometry']['location']['lng']
@@ -61,3 +69,86 @@ def add(request):
                     p.address = address
                     p.save()
         return redirect("/home/")
+
+@csrf_exempt
+def addMyPlace(request):
+    print('here')
+    if request.method == 'GET':
+        return render(request, "addMyPlace.html", {'form': PlaceForm(), 'error': 0})
+    if request.method == 'POST':
+        f = PlaceForm(request.POST)
+        if f.is_valid():
+            p = f.save(commit=False)
+            # find out if user-submitted address works
+            address = p.address
+            address = address.replace(" ", "%20")
+            c1 = urllib.request.urlopen(
+                "https://maps.googleapis.com/maps/api/geocode/json?address=" + address + "&key=AIzaSyBeQKOCrIrLMacq-2vXFmbUpUh0GaI-FyM")
+            c2 = c1.read()
+            addressData = json.loads(c2)
+            print(addressData)
+            # if this is true then the request was bad
+            if addressData['status'] == "ZERO_RESULTS":
+                return render(request, "addMyPlace.html", {'form': PlaceForm(instance=p), 'error': 1})
+            else:
+                address = addressData['results'][0]['formatted_address']
+                # check if this address is already in the database
+                if Property.objects.filter(address = address).count() > 0:
+                    return render(request, "addMyPlace.html", {'form': PlaceForm(instance=p), 'error': 2})
+                elif Place.objects.filter(address = address).count() > 0:
+                    return render(request, "addMyPlace.html", {'form': PlaceForm(instance=p), 'error': 2})
+                else:
+                    latitude = addressData['results'][0]['geometry']['location']['lat']
+                    longitude = addressData['results'][0]['geometry']['location']['lng']
+                    print(latitude)
+                    print(longitude)
+                    p.user = "bob"
+                    p.latitude = latitude
+                    p.longitude = longitude
+                    p.address = address
+                    p.save()
+        else:
+            print('invalid')
+        return redirect("/home/")
+
+@csrf_exempt
+def delete(request):
+    if request.user.is_authenticated:
+        id = request.GET['id']
+        if request.GET['property'] == 'rental':
+            p = Property.objects.get(id=id)
+            p.delete()
+        else:
+            p = Place.objects.get(id=id)
+            p.delete()
+        return redirect("/table/")
+    else:
+        return redirect("/invalid/")
+
+@csrf_exempt
+def update(request):
+    if request.user.is_authenticated:
+        if request.method == 'GET':
+            request.session['id'] = request.GET['id']
+            if request.GET['property'] == 'rental':
+                t = Property.objects.get(id=request.GET['id'])
+                f = PropertyForm(instance=t)
+                return render(request, "updateRental.html", {'form': f})
+            else:
+                t = Place.objects.get(id=request.GET['id'])
+                f = PlaceForm(instance=t)
+                return render(request, "updatePlace.html", {'form': f})
+        if request.method == 'POST':
+            if request.GET['property'] == 'rental':
+                t = Property.objects.get(id=request.session['id'])
+                f = PropertyForm(request.POST, instance=t)
+                if f.is_valid:
+                    f.save()
+            else:
+                t = Place.objects.get(id=request.session['id'])
+                f = PlaceForm(request.POST, instance=t)
+                if f.is_valid:
+                    f.save()
+            return redirect("/table/")
+    else:
+        return redirect("/invalid/")
