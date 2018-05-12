@@ -1,0 +1,10 @@
+h1 {
+    text-align: center;
+    color: white;
+}
+
+body {
+    background-image: url("b2.jpg");
+    background-repeat: no-repeat;
+    background-size: cover;
+}

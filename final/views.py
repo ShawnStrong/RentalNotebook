@@ -2,6 +2,8 @@ from django.views.decorators.csrf import csrf_exempt
 from django.shortcuts import redirect, render
 from final.forms import PropertyForm, PlaceForm
 from final.models import Property, Place
+from django.contrib.auth.models import User
+from django.contrib.auth import authenticate, login, logout
 import urllib
 import json
 import os
@@ -11,10 +13,6 @@ import sys
 # We need to hide the google api key in an OS environment variable since it's sensitive information.
 # We access the key using this:
 googleApiKey = os.environ.get('GOOGLE_API_KEY')
-
-@csrf_exempt
-def signin(request):
-    return redirect('home/')
 
 @csrf_exempt
 def home(request):
@@ -69,6 +67,38 @@ def add(request):
                     p.address = address
                     p.save()
         return redirect("/home/")
+
+@csrf_exempt
+def signin(request):
+    if request.method == 'GET':
+        return render(request, "signin.html", {'form': PropertyForm(), 'error': 0})
+    if request.method == 'POST':
+        username = request.POST.get('username', '')
+        password = request.POST.get('password', '')
+        user = authenticate(username=username, password=password)
+        if user is not None and user.is_active:
+            login(request, user)
+            return redirect("/home/")
+        else:
+            return render(request, "signin.html", {'form': PropertyForm(), 'error': 0})
+        f = PropertyForm(request.POST)
+        if f.is_valid():
+            p = f.save(commit=False)
+    return  render(request, "signin.html", {'form': PropertyForm(instance=p), 'error': 1})
+
+@csrf_exempt
+def create(request):
+    if request.method == 'GET':
+        return render(request, "create.html", {'form': PropertyForm(), 'error': 0})
+    if request.method == 'POST':
+        username = request.POST.get('username', '')
+        password = request.POST.get('password', '')
+        email = request.POST.get('email', '')
+
+        user = User.objects.create_user(username, email, password)
+        #user = User.objects.create_user(username, '',password)
+        user.save()
+    return render(request, "signin.html", {'form': PropertyForm(), 'error': 0})
 
 @csrf_exempt
 def addMyPlace(request):
