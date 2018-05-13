@@ -12,6 +12,12 @@
 </head>
 <body>
 <h1>Rental Notebook</h1>
+{% if error == 1 %}
+        <div class="alert">
+          <span class="closebtn" onclick="this.parentElement.style.display='none';">&times;</span>
+          That address was not found or is invalid!
+        </div>
+{% endif %}
 <div class="row">
     <div class="col-sm-5"></div>
     <div class="col-sm-2">

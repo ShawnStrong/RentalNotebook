@@ -96,11 +96,11 @@ def signin(request):
             login(request, user)
             return redirect("/home/")
         else:
-            return render(request, "signin.html", {'form': PropertyForm(), 'error': 0})
+            return render(request, "signin.html", {'form': PropertyForm(), 'error': 1})
         f = PropertyForm(request.POST)
         if f.is_valid():
             p = f.save(commit=False)
-    return  render(request, "signin.html", {'form': PropertyForm(instance=p), 'error': 1})
+    return render(request, "signin.html", {'form': PropertyForm(instance=p), 'error': 1})
 
 @csrf_exempt
 def create(request):
@@ -141,9 +141,9 @@ def addMyPlace(request):
                 else:
                     address = addressData['results'][0]['formatted_address']
                     # check if this address is already in the database
-                    if Property.objects.filter(address = address).count() > 0:
+                    if Property.objects.filter(address = address, user=request.user.get_username()).count() > 0:
                         return render(request, "addMyPlace.html", {'form': PlaceForm(instance=p), 'error': 2})
-                    elif Place.objects.filter(address = address).count() > 0:
+                    elif Place.objects.filter(address = address, user=request.user.get_username()).count() > 0:
                         return render(request, "addMyPlace.html", {'form': PlaceForm(instance=p), 'error': 2})
                     else:
                         latitude = addressData['results'][0]['geometry']['location']['lat']
