@@ -16,16 +16,25 @@ form.signinf {
     top: 10%;
     background-color: white;
     border: black;
+}
 
+form.backf {
+    position: absolute;
+    top: 17%;
+    left: 44%;
 }
 
 input.b1 {
     position: absolute;
-    left: 80%
+    left: 78%
 }
 
-form.createf {
+div.alert {
     position: absolute;
-    left: 47.8%;
-    top: 14.48%
+    font-weight: bold;
+    color: red;
+    left: 45%;
+    top: 8%;
 }
+
+

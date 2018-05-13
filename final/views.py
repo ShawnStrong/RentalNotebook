@@ -111,6 +111,9 @@ def create(request):
         password = request.POST.get('password', '')
         email = request.POST.get('email', '')
 
+        if (username == '' or password == '' or email == ''):
+            return render(request, "create.html", {'error':1})
+
         user = User.objects.create_user(username, email, password)
         #user = User.objects.create_user(username, '',password)
         user.save()
@@ -205,3 +208,8 @@ def update(request):
 @csrf_exempt
 def invalid(request):
     return render(request, "invalid.html")
+
+@csrf_exempt
+def signout(request):
+    logout(request)
+    return redirect('/signin/')

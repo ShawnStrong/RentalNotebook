@@ -3,16 +3,28 @@
 <head>
     <meta charset="UTF-8">
     <title>Create User</title>
+    {% load static %}
+    <link rel="stylesheet" type="text/css" href="{% static 'create.css' %}" />
 </head>
 <body>
-<form method="post" action="/create/">
-    Choose a username:<br>
+<h1>Rental Notebook</h1>
+{% if error == 1 %}
+    <div class="alert">
+        <span class="closebtn" onclick="this.parentElement.style.display='none';">&times;</span>
+        ***Please fill in all fields!!***
+    </div>
+{% endif %}
+<form method="post" action="/create/" class="signinf">
+    Choose a username:
     <input type="text" name="username"><br>
-    Choose a password:<br>
+    Choose a password:
     <input type="text" name="password"><br>
-    Email:<br>
+    Email:
     <input type="text" name="email"><br>
-    <input type="submit" value="Add User"/>
+    <input type="submit" value="Add User" class="b1"/>
+</form>
+<form action="/signin" class="backf">
+    <input type="submit" class = "b2" value="Back"/>
 </form>
 </body>
 </html>
