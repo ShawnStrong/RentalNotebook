@@ -1,6 +1,6 @@
 h1 {
     position: relative;
-    text-align: center;
+    left: 40%;
     color: white;
 }
 
@@ -10,31 +10,20 @@ body {
     background-size: cover;
 }
 
-form.signinf {
-    position: absolute;
-    left: 44%;
-    top: 10%;
-    background-color: white;
+form.createf {
     border: black;
 }
 
-form.backf {
-    position: absolute;
-    top: 17%;
-    left: 44%;
-}
-
-input.b1 {
-    position: absolute;
-    left: 78%
+p.text1 {
+    color: white;
 }
 
 div.alert {
     position: absolute;
     font-weight: bold;
     color: red;
-    left: 45%;
-    top: 8%;
+    left: 40%;
+    top: 5%;
 }
 
 

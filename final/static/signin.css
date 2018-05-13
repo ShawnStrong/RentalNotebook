@@ -1,6 +1,6 @@
 h1 {
     position: relative;
-    text-align: center;
+    left: 41%;
     color: white;
 }
 
@@ -11,21 +11,9 @@ body {
 }
 
 form.signinf {
-    position: absolute;
-    left: 44%;
-    top: 10%;
-    background-color: white;
     border: black;
-
 }
 
-input.b1 {
-    position: absolute;
-    left: 80%
-}
-
-form.createf {
-    position: absolute;
-    left: 47.8%;
-    top: 14.48%
+p.text1 {
+    color: white
 }
