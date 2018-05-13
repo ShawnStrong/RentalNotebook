@@ -25,16 +25,3 @@
     background-color: #4CAF50;
     color: white;
 }
-
-/* two columns */
-.column {
-    float: left;
-    width: 50%;
-}
-
-/* Clear floats after the columns */
-.row:after {
-    content: "";
-    display: table;
-    clear: both;
-}

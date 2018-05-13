@@ -1,10 +1,20 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+    <title>Home</title>
     <meta charset="UTF-8">
-    <title>Title</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
     {% load static %}
     <link rel="stylesheet" type="text/css" href="{% static 'home.css' %}" />
+    <style>
+      #map {
+        height: 600px;
+        width: 700px;
+       }
+    </style>
 </head>
 <body>
     <div class="topnav">
@@ -14,19 +24,24 @@
     </div>
 
     <div class="row">
-        <div class="column">
+        <div class="col-sm-2"></div>
+        <div class="col-sm-4">
             <h3>My Places</h3>
             <b>School</b>
             <ul>
                 {% for i in school %}
-                    <li>
-                        <table>
-                            <tr><td>Address: {{ i.address }}</td></tr>
-                            <tr><td>Notes: {{ i.notes }}</td></tr>
-                            <tr><td><a href="/update/?id={{ i.id }}&property=place">Update</a></td>
-                                <td><a href="/delete/?id={{ i.id }}&property=place">Delete</a></tr>
-                        </table>
-                    </li>
+                    <tbody>
+                          <div class="row">
+                              <div class="col-sm-12"><b>Address: </b> {{ i.address }}</div>
+                          </div>
+                          <div class="row">
+                              <div class="col-sm-12"><b>Notes: </b> {{ i.notes }}</div>
+                          </div>
+                          <div class="row">
+                              <div class="col-sm-6"><a href="/update/?id={{ i.id }}&property=place">Update</a></div>
+                              <div class="col-sm-6"><a href="/delete/?id={{ i.id }}&property=place">Delete</a></div>
+                          </div>
+                    </tbody>
                 {% empty %}
                     No schools added yet. Use 'Add My Place' to add one.
                 {% endfor %}
@@ -34,14 +49,18 @@
             <b>Job</b>
             <ul>
                 {% for i in job %}
-                    <li>
-                        <table>
-                            <tr><td>Address: {{ i.address }}</td></tr>
-                            <tr><td>Notes: {{ i.notes }}</td></tr>
-                            <tr><td><a href="/update/?id={{ i.id }}&property=place">Update</a></td>
-                                <td><a href="/delete/?id={{ i.id }}&property=place">Delete</a></tr>
-                        </table>
-                    </li>
+                    <tbody>
+                          <div class="row">
+                              <div class="col-sm-12"><b>Address: </b> {{ i.address }}</div>
+                          </div>
+                          <div class="row">
+                              <div class="col-sm-12"><b>Notes: </b> {{ i.notes }}</div>
+                          </div>
+                          <div class="row">
+                              <div class="col-sm-6"><a href="/update/?id={{ i.id }}&property=place">Update</a></div>
+                              <div class="col-sm-6"><a href="/delete/?id={{ i.id }}&property=place">Delete</a></div>
+                          </div>
+                    </tbody>
                 {% empty %}
                     No jobs added yet. Use 'Add My Place' to add one.
                 {% endfor %}
@@ -49,14 +68,18 @@
             <b>Other</b>
             <ul>
                 {% for i in other %}
-                    <li>
-                        <table>
-                            <tr><td>Address: {{ i.address }}</td></tr>
-                            <tr><td>Notes: {{ i.notes }}</td></tr>
-                            <tr><td><a href="/update/?id={{ i.id }}&property=place">Update</a></td>
-                                <td><a href="/delete/?id={{ i.id }}&property=place">Delete</a></tr>
-                        </table>
-                    </li>
+                    <tbody>
+                          <div class="row">
+                              <div class="col-sm-12"><b>Address: </b> {{ i.address }}</div>
+                          </div>
+                          <div class="row">
+                              <div class="col-sm-12"><b>Notes: </b> {{ i.notes }}</div>
+                          </div>
+                          <div class="row">
+                              <div class="col-sm-6"><a href="/update/?id={{ i.id }}&property=place">Update</a></div>
+                              <div class="col-sm-6"><a href="/delete/?id={{ i.id }}&property=place">Delete</a></div>
+                          </div>
+                    </tbody>
                 {% empty %}
                     No 'Other' added yet. Use 'Add My Place' to add one.
                 {% endfor %}
@@ -64,27 +87,68 @@
             <h3>Rentals</h3>
             <ul>
                 {% for i in properties %}
-                    <li>
-                        <table>
-                            <tr><td>Address: {{ i.address }}</td></tr>
-                            <tr><td>Type: {{ i.type }}</td><td>Rent: {{ i.rent }}</td></tr>
-                            <tr><td>Bedrooms: {{ i.bedrooms }}</td><td>Bathrooms: {{ i.bathrooms }}</td></tr>
-                            <tr><td>Link: {{ i.link }}</td></tr>
-                            <tr><td>Notes: {{ i.notes }}</td></tr>
-                            <tr><td><a href="/update/?id={{ i.id }}&property=rental">Update</a></td>
-                                <td><a href="/delete/?id={{ i.id }}&property=rental">Delete</a></tr>
-                        </table>
-                    </li>
+                    <tbody>
+                          <div class="row">
+                              <div class="col-sm-12"><b>Address: </b> {{ i.address }}</div>
+                          </div>
+                          <div class="row">
+                              <div class="col-sm-4"><b>Rent: </b> {{ i.rent }}</div>
+                              <div class="col-sm-4"><b>Bedrooms: </b> {{ i.bedrooms }}</div>
+                              <div class="col-sm-4"><b>Bathrooms: </b> {{ i.bathrooms }}</div>
+                          </div>
+                          <div class="row">
+                              <div class="col-sm-12"><b>Link: </b> {{ i.link }}</div>
+                          </div>
+                          <div class="row">
+                              <div class="col-sm-12"><b>Notes: </b> {{ i.notes }}</div>
+                          </div>
+                          <div class="row">
+                              <div class="col-sm-6"><a href="/update/?id={{ i.id }}&property=rental">Update</a></div>
+                              <div class="col-sm-6"><a href="/delete/?id={{ i.id }}&property=rental">Delete</a></div>
+                          </div>
+                    </tbody>
+                {% empty %}
+                    No 'Other' added yet. Use 'Add My Place' to add one.
                 {% endfor %}
             </ul>
         </div>
-        <div class="column">
-            <iframe
-                  width="600"
-                  height="700"
-                  frameborder="0" style="border:0"
-                  src="https://www.google.com/maps/embed/v1/place?key={{ googleApiKey }}&q=Space+Needle,Seattle+WA" allowfullscreen>
-            </iframe>
+        <div class="col-sm-6">
+            <div id="map"></div>
+            <script>
+              function initMap() {
+                var map = new google.maps.Map(document.getElementById('map'), {
+                    zoom: 12,
+                    center: {lat: {{ lat }}, lng: {{ lng }}}
+                });
+                {% for i in school %}
+                  var marker = new google.maps.Marker({
+                      position: {lat: {{ i.latitude }}, lng: {{ i.longitude }} },
+                      map: map
+                  })
+                {% endfor %}
+                {% for i in job %}
+                  var marker = new google.maps.Marker({
+                      position: {lat: {{ i.latitude }}, lng: {{ i.longitude }} },
+                      map: map
+                  })
+                {% endfor %}
+                {% for i in other %}
+                  var marker = new google.maps.Marker({
+                      position: {lat: {{ i.latitude }}, lng: {{ i.longitude }} },
+                      map: map
+                  })
+                {% endfor %}
+                {% for i in properties %}
+                  var marker = new google.maps.Marker({
+                      position: {lat: {{ i.latitude }}, lng: {{ i.longitude }} },
+                      map: map
+                  })
+                {% endfor %}
+              }
+            </script>
+            <script async defer
+            src="https://maps.googleapis.com/maps/api/js?key={{ googleApiKey }}&callback=initMap">
+            </script>
         </div>
     </div>
 

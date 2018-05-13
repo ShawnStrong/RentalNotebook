@@ -3,6 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <title>Update Rental</title>
+    {% load static %}
+    <link rel="stylesheet" type="text/css" href="{% static 'add.css' %}" />
 </head>
 <body>
     <div class="topnav">
@@ -11,11 +13,16 @@
         <a href="/addMyPlace/">Add My Place</a>
     </div>
     <br/>
-    <form method="post" action="/update/?property=place">
-        <table>
-            {{ form.as_table }}
-        </table>
-        <input type="submit"/>
-    </form>
+    <div class="row">
+        <div class="col-sm-4"></div>
+        <div class="col-sm-4">
+            <form method="post" action="/update/?property=place">
+                <table>
+                    {{ form.as_table }}
+                </table>
+                <input type="submit"/>
+            </form>
+        </div>
+    </div>
 </body>
 </html>

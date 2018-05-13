@@ -16,57 +16,73 @@ googleApiKey = os.environ.get('GOOGLE_API_KEY')
 
 @csrf_exempt
 def home(request):
-    properties = Property.objects.all()
-    school = Place.objects.filter(type = 'School')
-    job = Place.objects.filter(type = 'Job')
-    other = Place.objects.filter(type = 'Other')
-    return render(request, "home.html", {'properties': properties,
-                                         'school': school,
-                                         'job': job,
-                                         'other': other,
-                                         'googleApiKey': googleApiKey})
-
-@csrf_exempt
-def getdata(request):
-    return redirect('home/')
+    if request.user.is_authenticated:
+        # get user location so we can center map on them
+        ip = request.META.get('REMOTE_ADDR')
+        if ip == "127.0.0.1":
+            ip = "65.29.183.96"
+        c1 = urllib.request.urlopen(
+            "http://ip-api.com/json/" + ip)
+        c2 = c1.read()
+        locationData = json.loads(c2)
+        lat = locationData['lat']
+        lon = locationData['lon']
+        # these will go onto the main screen
+        properties = Property.objects.filter(user=request.user.get_username())
+        school = Place.objects.filter(type = 'School', user=request.user.get_username())
+        job = Place.objects.filter(type = 'Job', user=request.user.get_username())
+        other = Place.objects.filter(type = 'Other', user=request.user.get_username())
+        return render(request, "home.html", {'properties': properties,
+                                             'school': school,
+                                             'job': job,
+                                             'other': other,
+                                             'lat': lat,
+                                             'lng': lon,
+                                             'googleApiKey': googleApiKey})
+    else:
+        return redirect("/invalid/")
 
 @csrf_exempt
 def add(request):
-    if request.method == 'GET':
-        return render(request, "add.html", {'form': PropertyForm(), 'error': 0})
-    if request.method == 'POST':
-        f = PropertyForm(request.POST)
-        if f.is_valid():
-            p = f.save(commit=False)
-            # find out if user-submitted address works
-            address = p.address
-            address = address.replace(" ", "%20")
-            c1 = urllib.request.urlopen(
-                "https://maps.googleapis.com/maps/api/geocode/json?address=" + address + "&key=AIzaSyBeQKOCrIrLMacq-2vXFmbUpUh0GaI-FyM")
-            c2 = c1.read()
-            addressData = json.loads(c2)
-            print(addressData)
-            # if this is true then the request was bad
-            if addressData['status'] == "ZERO_RESULTS":
-                return render(request, "add.html", {'form': PropertyForm(instance=p), 'error': 1})
-            else:
-                address = addressData['results'][0]['formatted_address']
-                # check if this address is already in the database
-                if Property.objects.filter(address = address).count() > 0:
-                    return render(request, "add.html", {'form': PropertyForm(instance=p), 'error': 2})
-                elif Place.objects.filter(address = address).count() > 0:
-                    return render(request, "add.html", {'form': PropertyForm(instance=p), 'error': 2})
+    if request.user.is_authenticated:
+        if request.method == 'GET':
+            return render(request, "add.html", {'form': PropertyForm(), 'error': 0})
+        if request.method == 'POST':
+            f = PropertyForm(request.POST)
+            if f.is_valid():
+                p = f.save(commit=False)
+                # find out if user-submitted address works
+                address = p.address
+                address = address.replace(" ", "%20")
+                c1 = urllib.request.urlopen(
+                    "https://maps.googleapis.com/maps/api/geocode/json?address="
+                    + address + "&key=AIzaSyBeQKOCrIrLMacq-2vXFmbUpUh0GaI-FyM")
+                c2 = c1.read()
+                addressData = json.loads(c2)
+                print(addressData)
+                # if this is true then the request was bad
+                if addressData['status'] == "ZERO_RESULTS":
+                    return render(request, "add.html", {'form': PropertyForm(instance=p), 'error': 1})
                 else:
-                    latitude = addressData['results'][0]['geometry']['location']['lat']
-                    longitude = addressData['results'][0]['geometry']['location']['lng']
-                    print(latitude)
-                    print(longitude)
-                    p.user = "bob"
-                    p.latitude = latitude
-                    p.longitude = longitude
-                    p.address = address
-                    p.save()
-        return redirect("/home/")
+                    address = addressData['results'][0]['formatted_address']
+                    # check if this address is already in the database
+                    if Property.objects.filter(address = address).count() > 0:
+                        return render(request, "add.html", {'form': PropertyForm(instance=p), 'error': 2})
+                    elif Place.objects.filter(address = address).count() > 0:
+                        return render(request, "add.html", {'form': PropertyForm(instance=p), 'error': 2})
+                    else:
+                        latitude = addressData['results'][0]['geometry']['location']['lat']
+                        longitude = addressData['results'][0]['geometry']['location']['lng']
+                        print(latitude)
+                        print(longitude)
+                        p.user = request.user.get_username()
+                        p.latitude = latitude
+                        p.longitude = longitude
+                        p.address = address
+                        p.save()
+            return redirect("/home/")
+    else:
+        return redirect("/invalid/")
 
 @csrf_exempt
 def signin(request):
@@ -102,44 +118,45 @@ def create(request):
 
 @csrf_exempt
 def addMyPlace(request):
-    print('here')
-    if request.method == 'GET':
-        return render(request, "addMyPlace.html", {'form': PlaceForm(), 'error': 0})
-    if request.method == 'POST':
-        f = PlaceForm(request.POST)
-        if f.is_valid():
-            p = f.save(commit=False)
-            # find out if user-submitted address works
-            address = p.address
-            address = address.replace(" ", "%20")
-            c1 = urllib.request.urlopen(
-                "https://maps.googleapis.com/maps/api/geocode/json?address=" + address + "&key=AIzaSyBeQKOCrIrLMacq-2vXFmbUpUh0GaI-FyM")
-            c2 = c1.read()
-            addressData = json.loads(c2)
-            print(addressData)
-            # if this is true then the request was bad
-            if addressData['status'] == "ZERO_RESULTS":
-                return render(request, "addMyPlace.html", {'form': PlaceForm(instance=p), 'error': 1})
-            else:
-                address = addressData['results'][0]['formatted_address']
-                # check if this address is already in the database
-                if Property.objects.filter(address = address).count() > 0:
-                    return render(request, "addMyPlace.html", {'form': PlaceForm(instance=p), 'error': 2})
-                elif Place.objects.filter(address = address).count() > 0:
-                    return render(request, "addMyPlace.html", {'form': PlaceForm(instance=p), 'error': 2})
+    if request.user.is_authenticated:
+        if request.method == 'GET':
+            return render(request, "addMyPlace.html", {'form': PlaceForm(), 'error': 0})
+        if request.method == 'POST':
+            f = PlaceForm(request.POST)
+            if f.is_valid():
+                p = f.save(commit=False)
+                # find out if user-submitted address works
+                address = p.address
+                address = address.replace(" ", "%20")
+                c1 = urllib.request.urlopen(
+                    "https://maps.googleapis.com/maps/api/geocode/json?address=" + address + "&key=AIzaSyBeQKOCrIrLMacq-2vXFmbUpUh0GaI-FyM")
+                c2 = c1.read()
+                addressData = json.loads(c2)
+                # if this is true then the request was bad
+                if addressData['status'] == "ZERO_RESULTS":
+                    return render(request, "addMyPlace.html", {'form': PlaceForm(instance=p), 'error': 1})
                 else:
-                    latitude = addressData['results'][0]['geometry']['location']['lat']
-                    longitude = addressData['results'][0]['geometry']['location']['lng']
-                    print(latitude)
-                    print(longitude)
-                    p.user = "bob"
-                    p.latitude = latitude
-                    p.longitude = longitude
-                    p.address = address
-                    p.save()
+                    address = addressData['results'][0]['formatted_address']
+                    # check if this address is already in the database
+                    if Property.objects.filter(address = address).count() > 0:
+                        return render(request, "addMyPlace.html", {'form': PlaceForm(instance=p), 'error': 2})
+                    elif Place.objects.filter(address = address).count() > 0:
+                        return render(request, "addMyPlace.html", {'form': PlaceForm(instance=p), 'error': 2})
+                    else:
+                        latitude = addressData['results'][0]['geometry']['location']['lat']
+                        longitude = addressData['results'][0]['geometry']['location']['lng']
+                        print(latitude)
+                        print(longitude)
+                        p.user = request.user.get_username()
+                        p.latitude = latitude
+                        p.longitude = longitude
+                        p.address = address
+                        p.save()
+            else:
+                print('invalid')
+            return redirect("/home/")
         else:
-            print('invalid')
-        return redirect("/home/")
+            return redirect("/invalid/")
 
 @csrf_exempt
 def delete(request):
@@ -151,7 +168,7 @@ def delete(request):
         else:
             p = Place.objects.get(id=id)
             p.delete()
-        return redirect("/table/")
+        return redirect("/home/")
     else:
         return redirect("/invalid/")
 
@@ -161,24 +178,30 @@ def update(request):
         if request.method == 'GET':
             request.session['id'] = request.GET['id']
             if request.GET['property'] == 'rental':
-                t = Property.objects.get(id=request.GET['id'])
-                f = PropertyForm(instance=t)
+                p = Property.objects.get(id=request.GET['id'])
+                f = PropertyForm(instance=p)
+                f.fields['address'].widget.attrs.update({'readonly': 'readonly','style':'background-color: rgb(200,200,200)'})
                 return render(request, "updateRental.html", {'form': f})
             else:
-                t = Place.objects.get(id=request.GET['id'])
-                f = PlaceForm(instance=t)
+                p = Place.objects.get(id=request.GET['id'])
+                f = PlaceForm(instance=p)
+                f.fields['address'].widget.attrs.update({'readonly': 'readonly', 'style': 'background-color: rgb(200,200,200)'})
                 return render(request, "updatePlace.html", {'form': f})
         if request.method == 'POST':
             if request.GET['property'] == 'rental':
-                t = Property.objects.get(id=request.session['id'])
-                f = PropertyForm(request.POST, instance=t)
+                p = Property.objects.get(id=request.session['id'])
+                f = PropertyForm(request.POST, instance=p)
                 if f.is_valid:
                     f.save()
             else:
-                t = Place.objects.get(id=request.session['id'])
-                f = PlaceForm(request.POST, instance=t)
+                p = Place.objects.get(id=request.session['id'])
+                f = PlaceForm(request.POST, instance=p)
                 if f.is_valid:
                     f.save()
-            return redirect("/table/")
+            return redirect("/home/")
     else:
         return redirect("/invalid/")
+
+@csrf_exempt
+def invalid(request):
+    return render(request, "invalid.html")
