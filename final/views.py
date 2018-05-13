@@ -65,10 +65,10 @@ def add(request):
                     return render(request, "add.html", {'form': PropertyForm(instance=p), 'error': 1})
                 else:
                     address = addressData['results'][0]['formatted_address']
-                    # check if this address is already in the database
-                    if Property.objects.filter(address = address).count() > 0:
+                    # check if this user already added this address
+                    if Property.objects.filter(address = address, user=request.user.get_username()).count() > 0:
                         return render(request, "add.html", {'form': PropertyForm(instance=p), 'error': 2})
-                    elif Place.objects.filter(address = address).count() > 0:
+                    elif Place.objects.filter(address = address, user=request.user.get_username()).count() > 0:
                         return render(request, "add.html", {'form': PropertyForm(instance=p), 'error': 2})
                     else:
                         latitude = addressData['results'][0]['geometry']['location']['lat']

@@ -11,11 +11,18 @@
   <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
 </head>
 <body>
-    <div class="topnav">
-      <a class="active" href="/home/">Home</a>
-      <a href="/add/">Add Rental</a>
-        <a href="/addMyPlace/">Add My Place</a>
-    </div>
+    <nav class="navbar navbar-inverse">
+      <div class="container-fluid">
+        <ul class="nav navbar-nav">
+          <li class="active"><a href="/home/">Home</a></li>
+          <li><a href="/add/">Add Rental</a></li>
+          <li><a href="/addMyPlace/">Add My Place</a></li>
+        </ul>
+        <ul class="nav navbar-nav navbar-right">
+          <li><a href="/signout/"><span class="glyphicon glyphicon-log-out"></span>Sign out</a></li>
+        </ul>
+      </div>
+    </nav>
     <br/>
     {% if error == 1 %}
         <div class="alert">
@@ -40,8 +47,5 @@
             </form>
         </div>
     </div>
-    <form action="/signout/">
-        <input type="submit" value="Sign out"/>
-    </form>
 </body>
 </html>
