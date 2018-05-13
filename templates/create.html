@@ -3,6 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <title>Create User</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
     {% load static %}
     <link rel="stylesheet" type="text/css" href="{% static 'create.css' %}" />
 </head>
@@ -14,17 +18,41 @@
         ***Please fill in all fields!!***
     </div>
 {% endif %}
-<form method="post" action="/create/" class="signinf">
-    Choose a username:
-    <input type="text" name="username"><br>
-    Choose a password:
-    <input type="text" name="password"><br>
-    Email:
-    <input type="text" name="email"><br>
-    <input type="submit" value="Add User" class="b1"/>
-</form>
-<form action="/signin" class="backf">
-    <input type="submit" class = "b2" value="Back"/>
-</form>
+<br>
+<div class="row">
+    <div class="col-sm-5"></div>
+    <div class="col-sm-1">
+        <form method="post" action="/create/" class="createf" id="form1">
+            <p class="text1">Choose a username:</p>
+            <input type="text" name="username"><br>
+            <p class="text1">Choose a password:</p>
+            <input type="text" name="password"><br>
+            <p class="text1">Email:</p>
+            <input type="text" name="email"><br>
+        </form>
+        <form action="/signin" class="backf" id="form2">
+
+        </form>
+    </div>
+</div>
+<div class="row">
+    <div class="col-sm-12"></div>
+</div>
+<div class="row">
+    <div class="col-sm-12"></div>
+</div>
+<div class="row">
+    <div class="col-sm-12"></div>
+</div>
+<div class="row">
+    <div class="col-sm-12"></div>
+</div>
+<div class="row">
+    <div class="col-sm-5"></div>
+    <div class="col-sm-2">
+        <input type="submit" class = "b2" value="Back" form="form2"/>
+        <input type="submit" value="Add User" class="b1" form="form1"/>
+    </div>
+</div>
 </body>
 </html>

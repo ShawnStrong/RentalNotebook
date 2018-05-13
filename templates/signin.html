@@ -3,20 +3,45 @@
 <head>
     <meta charset="UTF-8">
     <title>Sign In</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
     {% load static %}
     <link rel="stylesheet" type="text/css" href="{% static 'signin.css' %}" />
 </head>
 <body>
 <h1>Rental Notebook</h1>
-<form method="post" action="/signin/" class="signinf">
-    Username:
-    <input type="text" name="username"><br>
-    Password:
-    <input type="text" name="password"><br>
-    <input type="submit" class = "b1" value="Login"/>
-</form>
-<form action="/create" class="createf">
-    <input type="submit" class = "b2" value="Create New User"/>
-</form>
+<div class="row">
+    <div class="col-sm-5"></div>
+    <div class="col-sm-2">
+        <form method="post" action="/signin/" class="signinf" id="form1">
+            <p class="text1">Username</p>
+            <input type="text" name="username"><br>
+            <p class="text1">Password</p>
+            <input type="text" name="password"><br>
+        </form>
+        <form action="/create" class="createf" id="form2"></form>
+    </div>
+</div>
+<div class="row">
+    <div class="col-sm-12"></div>
+</div>
+<div class="row">
+    <div class="col-sm-12"></div>
+</div>
+<div class="row">
+    <div class="col-sm-12"></div>
+</div>
+<div class="row">
+    <div class="col-sm-12"></div>
+</div>
+<div class="row">
+    <div class="col-sm-5"></div>
+    <div class="col-sm-2">
+        <input type="submit" class = "b2" value="Create New User" form="form2"/>
+        <input type="submit" class = "b1" value="Login" form="form1"/>
+    </div>
+</div>
 </body>
 </html>
