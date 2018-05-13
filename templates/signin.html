@@ -7,15 +7,16 @@
     <link rel="stylesheet" type="text/css" href="{% static 'signin.css' %}" />
 </head>
 <body>
-<form method="post" action="/signin/">
-    Username:<br>
+<h1>Rental Notebook</h1>
+<form method="post" action="/signin/" class="signinf">
+    Username:
     <input type="text" name="username"><br>
-    Password:<br>
+    Password:
     <input type="text" name="password"><br>
-    <input type="submit" value="Login"/>
+    <input type="submit" class = "b1" value="Login"/>
 </form>
-<form action="/create">
-    <input type="submit" value="Create New User"/>
+<form action="/create" class="createf">
+    <input type="submit" class = "b2" value="Create New User"/>
 </form>
 </body>
 </html>
